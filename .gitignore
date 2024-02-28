@@ -1,4 +1,5 @@
 HELP.md
+/log/
 target/
 .idea/
 !.mvn/wrapper/maven-wrapper.jar
@@ -32,3 +33,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/.mvn/wrapper/maven-wrapper.jar
+/.mvn/wrapper/maven-wrapper.properties

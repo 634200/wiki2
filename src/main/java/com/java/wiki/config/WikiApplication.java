@@ -5,8 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-
 @ComponentScan("com.java")
 @SpringBootApplication
 public class WikiApplication {
@@ -18,4 +16,5 @@ public class WikiApplication {
         LOG.info("地址：\thttp://127.0.0.1:{}",env.getProperty("server.port"));
     }
 }
+
 
