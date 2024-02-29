@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 public class Testcontroller {
-    @Value("$test hello=Hello")
+    @Value("$test.hello=Hello")
     private String testHello;
     @GetMapping("/hello")
     public String hello(){
