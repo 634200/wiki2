@@ -1,4 +1,4 @@
-package com.java.wiki.config;
+package com.java.wiki;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 //@ComponentScan("com.java")
-@MapperScan({"com.java.wiki.mapper"})
+//@MapperScan({"com.java.wiki.mapper"})
 @SpringBootApplication
 @MapperScan("com.java.wiki.mapper")
 public class WikiApplication {

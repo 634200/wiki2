@@ -1,15 +1,3 @@
-GET http://localhost:8888/hello
-//Accept: application/json
-
->{%
-client.log("测试/hello接口");
-    client.log(response.body);
-    client.log(JSON.stringify(response.body));
-    client.assert(response.status === 200,"返回码不是200")；
-    client.assert(response.body === "Hello World","结果验证失败")；
-
-});
-%}
 
 ###
 
