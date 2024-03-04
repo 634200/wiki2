@@ -42,9 +42,9 @@
                 t_follow
                 t_like
                 t_user  -->
-        <table tableName="demo" domainObjectName="DemoName"/>
-        <table tableName="tests" domainObjectName="TestsName"/>
-
+        <!--        <table tableName="demo" domainObjectName="DemoName"/>-->
+        <!--        <table tableName="tests" domainObjectName="TestsName"/>-->
+        <table tableName="ebook" domainObjectName="EbookName"/>
         <!--  <table tableName="t_dept" domainObjectName="Dept" />  -->
     </context>
 </generatorConfiguration>
