@@ -1,6 +1,6 @@
-package com.java.wiki.pojo;
+package com.java.wiki.resp;
 
-public class EbookName {
+public class EbookNameResp {
     private Long id;
 
     private String name;

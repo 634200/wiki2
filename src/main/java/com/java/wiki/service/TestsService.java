@@ -10,11 +10,11 @@ import java.util.List;
 
 @Service
 
-public class TestService {
+public class TestsService {
     @Resource
     private TestsNameMapper testsMapper;
 
-    public List<TestsName> test() {
+    public List<TestsName> list() {
         return testsMapper.selectByExample(null);
     }
 }

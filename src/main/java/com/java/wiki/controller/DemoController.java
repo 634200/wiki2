@@ -5,6 +5,7 @@ import com.java.wiki.domain.CstCustomer;
 import com.java.wiki.mapper.CustMapper;
 import com.java.wiki.mapper.DemoNameMapper;
 import com.java.wiki.pojo.DemoName;
+import com.java.wiki.service.DemoService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +21,10 @@ import java.util.List;
 public class DemoController {
 
     @Resource
-    private DemoNameMapper demoNameMapper;
+    private DemoService demoService;
 
     @GetMapping("/list")
     public List<DemoName> list() {
-        return demoNameMapper.selectByExample(null);
+        return demoService.list();
     }
 }

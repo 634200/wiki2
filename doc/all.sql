@@ -36,11 +36,11 @@ create table `ebook`
   default charset = utf8mb4 comment ='电子书';
 
 insert into `ebook` (id, name, description)
-values (1, 'spring入门教程', '零基础入门java开发，企业级框架');
+values (1, 'Spring入门教程', '零基础入门Java开发，企业级框架');
 insert into `ebook` (id, name, description)
 values (2, 'Vue 入门教程', '零基础入门Vue开发,企业级应用开发最佳首选框架');
 insert into `ebook` (id, name, description)
-values (3, 'Python入门教程', '零基础入门Vue开发,企业级应用开发最佳首选框架');
+values (3, 'Python入门教程', '零基础入门Spring开发,企业级应用开发最佳首选框架');
 insert into `ebook` (id, name, description)
 values (4, 'Mysql入门教程', '零基础入门Mysql开发,企业级应用开发最佳首选框架');
 insert into `ebook` (id, name, description)
