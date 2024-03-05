@@ -6,6 +6,7 @@ import com.java.wiki.pojo.EbookName;
 import com.java.wiki.pojo.EbookNameExample;
 import com.java.wiki.req.EbookNameReq;
 import com.java.wiki.resp.EbookNameResp;
+import com.java.wiki.util.CopyUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +26,16 @@ public class EbookService {
         criteria.andNameLike("%" + req.getName() + "%");
         List<EbookName> ebookList = ebookMapper.selectByExample(ebookExample);
 
-        List<EbookNameResp> respList = new ArrayList<>();
-        for (EbookName ebook : ebookList) {
-            EbookNameResp ebookNameResp = new EbookNameResp();
-            BeanUtils.copyProperties(ebook, ebookNameResp);
-            respList.add(ebookNameResp);
-        }
-
-        return respList;
+//        List<EbookNameResp> respList = new ArrayList<>();
+//        for (EbookName ebook : ebookList) {
+////            EbookNameResp ebookNameResp = new EbookNameResp();
+////            BeanUtils.copyProperties(ebook, ebookNameResp);
+////          对象复制
+//            EbookNameResp ebookNameResp = CopyUtil.copy(ebook, EbookNameResp.class);
+//            respList.add(ebookNameResp);
+//        }
+        //列表复制
+        List<EbookNameResp> list = CopyUtil.copyList(ebookList, EbookNameResp.class);
+        return list;
     }
 }
