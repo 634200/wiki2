@@ -1,6 +1,6 @@
 package com.java.wiki.req;
 
-public class EbookNameReq {
+public class EbookNameReq extends PageReq {
     private Long id;
     private String name;
 

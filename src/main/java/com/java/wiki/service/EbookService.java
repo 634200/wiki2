@@ -8,6 +8,7 @@ import com.java.wiki.pojo.EbookName;
 import com.java.wiki.pojo.EbookNameExample;
 import com.java.wiki.req.EbookNameReq;
 import com.java.wiki.resp.EbookNameResp;
+import com.java.wiki.resp.PageResp;
 import com.java.wiki.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ public class EbookService {
     @Resource
     private EbookNameMapper ebookMapper;
 
-    public List<EbookNameResp> list(EbookNameReq req) {
+    public PageResp<EbookNameResp> list(EbookNameReq req) {
 
 
         EbookNameExample ebookExample = new EbookNameExample();
@@ -35,10 +36,12 @@ public class EbookService {
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
-        PageHelper.startPage(1, 3);
+        PageHelper.startPage(req.getPage(), req.getSize());
         List<EbookName> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<EbookName> pageInfo = new PageInfo<>(ebookList);
+
+
         LOG.info("总行数：{}", pageInfo.getTotal());
         LOG.info("总页数：{}", pageInfo.getPages());
 
@@ -50,8 +53,13 @@ public class EbookService {
 //            EbookNameResp ebookNameResp = CopyUtil.copy(ebook, EbookNameResp.class);
 //            respList.add(ebookNameResp);
 //        }
+
         //列表复制
         List<EbookNameResp> list = CopyUtil.copyList(ebookList, EbookNameResp.class);
-        return list;
+        PageResp<EbookNameResp> pageResp = new PageResp<>();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(list);
+
+        return pageResp;
     }
 }
