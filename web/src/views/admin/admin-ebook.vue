@@ -2,8 +2,8 @@
 
   <a-layout>
     <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
-    >
+        :style="{ background: '#fff' ,padding: '24px', margin: 0,
+            minHeight: '280px' }">
       <a-table
           :columns="columns"
           :row-key="record => record.id"
@@ -17,7 +17,8 @@
         </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-            <a-button type="primary" @click="edit">
+            <a-button type="primary" @click="edit(record)">
+              <!--<a-button type="primary" @click="edit">-->
               编辑
             </a-button>
             <a-button type="danger">
@@ -28,13 +29,30 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+
   <a-modal
       title="电子书表单"
       v-model:visible="modalVisible"
       :confirm-loading="modalLoading"
       @ok="handleModalOk"
   >
-    <p>test</p>>
+    <a-form :model="ebook" :label-col="{span:6}">
+      <a-form-item label="封面">
+        <a-input v-model="ebook.cover"/>
+      </a-form-item>
+      <a-form-item label="名称">
+        <a-input v-model="ebook.name"/>
+      </a-form-item>
+      <a-form-item label="分类一">
+        <a-input v-model="ebook.category1_id"/>
+      </a-form-item>
+      <a-form-item label="分类二">
+        <a-input v-model="ebook.category2_id"/>
+      </a-form-item>
+      <a-form-item label="描述">
+        <a-input v-model="ebook.desc" type="text"/>
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 
@@ -43,18 +61,15 @@ import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
-  name: 'AdminEbook',
-  setup() {
-    const param = ref();
-    param.value = {};
+  name: 'AdminEbook', setup() {
     const ebooks = ref();
     const pagination = ref({
       current: 1,
       pageSize: 4,
       total: 0
     });
-    const loading = ref(false);
 
+    const loading = ref(false);
     const columns = [
       {
         title: '封面',
@@ -72,7 +87,6 @@ export default defineComponent({
       },
       {
         title: '分类二',
-        key: 'category2Id',
         dataIndex: 'category2Id'
       },
       {
@@ -90,30 +104,27 @@ export default defineComponent({
       {
         title: 'Action',
         key: 'action',
-        slots: {customRender: 'action'}
+        slots: {
+          customRender: 'action'
+        }
       }
     ];
 
     /**
-     * 数据查询
+     数据查询
      **/
-    const handleQuery = (params: any) => {
+    const handleQuery = (p: any) => {
       loading.value = true;
-      // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
-      ebooks.value = [];
       axios.get("/ebook/list", {
-        params: {
-          page: params.page,
-          size: params.size
-        }
+        params: p
       }).then((response) => {
         loading.value = false;
+
         const data = response.data;
         ebooks.value = data.content.list;
         // 重置分页按钮
-        pagination.value.current = params.page;
+        pagination.value.current = p.page;
         pagination.value.total = data.content.total;
-
       });
     };
 
@@ -128,24 +139,33 @@ export default defineComponent({
       });
     };
 
+    // -----表单--------
+    const ebook = ref({
+      cover: "",
+      name: "",
+      category1_id: "",
+      category2_id: "",
+      desc: ""
+    });
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
-      modalLoading.value = true;
+      modalLoading.value = true
       setTimeout(() => {
         modalVisible.value = false;
         modalLoading.value = false;
-      }, 2000);
-    };
+      }, 2000)
+    }
 
-
-    const edit = () => {
+    // 编辑
+    const edit = (record: any) => {
       modalVisible.value = true;
-    };
+      ebook.value = record
+    }
 
     onMounted(() => {
       handleQuery({
-        page: 1,
+        page: 1, // 参数与PageReq中的变量名一致才行
         size: pagination.value.pageSize
       });
     });
@@ -159,10 +179,19 @@ export default defineComponent({
 
       edit,
 
+      ebook,
       modalVisible,
       modalLoading,
       handleModalOk
     }
   }
-});
+})
+;
 </script>
+
+<style scoped>
+img {
+  width: 50px;
+  height: 50px;
+}
+</style>
