@@ -6,18 +6,18 @@ import com.github.pagehelper.PageInfo;
 import com.java.wiki.mapper.EbookNameMapper;
 import com.java.wiki.pojo.EbookName;
 import com.java.wiki.pojo.EbookNameExample;
-import com.java.wiki.req.EbookNameReq;
+import com.java.wiki.req.EbookNameQueryReq;
+import com.java.wiki.req.EbookNameSaveReq;
 import com.java.wiki.resp.EbookNameResp;
 import com.java.wiki.resp.PageResp;
 import com.java.wiki.util.CopyUtil;
+import com.java.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,8 +27,10 @@ public class EbookService {
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
     @Resource
     private EbookNameMapper ebookMapper;
+    @Resource
+    private SnowFlake snowFlake;
 
-    public PageResp<EbookNameResp> list(EbookNameReq req) {
+    public PageResp<EbookNameResp> list(EbookNameQueryReq req) {
 
 
         EbookNameExample ebookExample = new EbookNameExample();
@@ -61,5 +63,21 @@ public class EbookService {
         pageResp.setList(list);
 
         return pageResp;
+    }
+
+    /**
+     * 保存
+     */
+    public void save(EbookNameSaveReq req) {
+        EbookName ebook = CopyUtil.copy(req, EbookName.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            //新增
+            ebook.setId(snowFlake.nextId());
+            ebookMapper.insert(ebook);
+        } else {
+            //更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
+
     }
 }
