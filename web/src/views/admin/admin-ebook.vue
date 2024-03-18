@@ -27,9 +27,16 @@
               <!--<a-button type="primary" @click="edit">-->
               编辑
             </a-button>
-            <a-button type="danger">
-              删除
-            </a-button>
+            <a-popconfirm
+                title="删除后不可恢复，确认删除?"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="handleDelete(record.id)"
+            >
+              <a-button type="danger">
+                删除
+              </a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -65,9 +72,19 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
+import wrapperRaf from "ant-design-vue/es/_util/raf";
+import cancel = wrapperRaf.cancel;
 
 export default defineComponent({
-  name: 'AdminEbook', setup() {
+  name: 'AdminEbook',
+  methods: {cancel},
+
+  computed: {
+    wrapperRaf() {
+      return wrapperRaf
+    }
+  },
+  setup() {
     const ebooks = ref();
     const pagination = ref({
       current: 1,
@@ -159,11 +176,11 @@ export default defineComponent({
       modalLoading.value = true;
 
       axios.post("/ebook/save", ebook.value).then((response) => {
-
         const data = response.data;
         if (data.success) {
           modalVisible.value = false;
           modalLoading.value = false;
+          //重新加载列表
           handleQuery({
             page: pagination.value.current, // 参数与PageReq中的变量名一致才行
             size: pagination.value.pageSize,
@@ -182,6 +199,20 @@ export default defineComponent({
       modalVisible.value = true;
       Object.assign(ebook.value, {});
     }
+
+    const handleDelete = (id: number) => {
+      axios.delete("/ebook/delete/" + id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+
+          //重新加载列表
+          handleQuery({
+            page: pagination.value.current, // 参数与PageReq中的变量名一致才行
+            size: pagination.value.pageSize,
+          });
+        }
+      });
+    };
 
 
     onMounted(() => {
@@ -204,7 +235,9 @@ export default defineComponent({
       ebook,
       modalVisible,
       modalLoading,
-      handleModalOk
+      handleModalOk,
+
+      handleDelete
     }
   }
 })
