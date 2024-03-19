@@ -89,6 +89,7 @@ import axios from 'axios';
 import wrapperRaf from "ant-design-vue/es/_util/raf";
 import cancel = wrapperRaf.cancel;
 import {message} from 'ant-design-vue';
+import {Tool} from "@/util/tool";
 
 export default defineComponent({
   name: 'AdminEbook',
@@ -215,7 +216,7 @@ export default defineComponent({
     // 编辑
     const edit = (record: any) => {
       modalVisible.value = true;
-      ebook.value = record
+      ebook.value = Tool.copy(record);
     }
     // 新增
     const add = () => {
