@@ -74,6 +74,7 @@ import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import wrapperRaf from "ant-design-vue/es/_util/raf";
 import cancel = wrapperRaf.cancel;
+import {message} from 'ant-design-vue';
 
 export default defineComponent({
   name: 'AdminEbook',
@@ -88,7 +89,7 @@ export default defineComponent({
     const ebooks = ref();
     const pagination = ref({
       current: 1,
-      pageSize: 4,
+      pageSize: 1001,
       total: 0
     });
 
@@ -144,10 +145,14 @@ export default defineComponent({
         loading.value = false;
 
         const data = response.data;
-        ebooks.value = data.content.list;
-        // 重置分页按钮
-        pagination.value.current = p.page;
-        pagination.value.total = data.content.total;
+        if (data.success) {
+          ebooks.value = data.content.list;
+          // 重置分页按钮
+          pagination.value.current = p.page;
+          pagination.value.total = data.content.total;
+        } else {
+          message.error(data.message);
+        }
       });
     };
 
