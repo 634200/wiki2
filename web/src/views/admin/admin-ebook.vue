@@ -5,10 +5,24 @@
         :style="{ background: '#fff' ,padding: '24px', margin: 0,
             minHeight: '280px' }">
       <p>
-        <a-button type="primary" @click="add()" size="large">
-          <!--<a-button type="primary" @click="edit">-->
+        <a-from layout="inline" :model="param">
+          <a-form-item>
+            <a-input v-model:value="param.name" placeholder="名称">
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleQuery({page:1,size:pagination.pageSize})">
+              <!--<a-button type="primary" @click="edit">-->
+              查询
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add()">
           新增
-        </a-button>
+            </a-button>
+          </a-form-item>
+        </a-from>
+
       </p>
       <a-table
           :columns="columns"
@@ -86,6 +100,8 @@ export default defineComponent({
     }
   },
   setup() {
+    const param = ref();
+    param.value = {};
     const ebooks = ref();
     const pagination = ref({
       current: 1,
@@ -140,10 +156,13 @@ export default defineComponent({
     const handleQuery = (p: any) => {
       loading.value = true;
       axios.get("/ebook/list", {
-        params: p
+        params: {
+          page: p.page,
+          size: p.size,
+          name: param.value.name
+        }
       }).then((response) => {
         loading.value = false;
-
         const data = response.data;
         if (data.success) {
           ebooks.value = data.content.list;
@@ -163,17 +182,14 @@ export default defineComponent({
       console.log("看看自带的分页参数都有啥：" + pagination);
       handleQuery({
         page: pagination.current,
-        size: pagination.pageSize
+        size: pagination.pageSize,
+
       });
     };
 
     // -----表单--------
     const ebook = ref({
-      cover: "",
-      name: "",
-      category1Id: "",
-      category2Id: "",
-      description: ""
+
     });
     const modalVisible = ref(false);
     const modalLoading = ref(false);
@@ -185,7 +201,6 @@ export default defineComponent({
         const data = response.data;
         if (data.success) {
           modalVisible.value = false;
-          modalLoading.value = false;
           //重新加载列表
           handleQuery({
             page: pagination.value.current, // 参数与PageReq中的变量名一致才行
@@ -205,7 +220,8 @@ export default defineComponent({
     // 新增
     const add = () => {
       modalVisible.value = true;
-      Object.assign(ebook.value, {});
+      // Object.assign(ebook.value, {});
+      ebook.value = {}
     }
 
     const handleDelete = (id: number) => {
@@ -231,11 +247,13 @@ export default defineComponent({
     });
 
     return {
+      param,
       ebooks,
       pagination,
       columns,
       loading,
       handleTableChange,
+      handleQuery,
 
       edit,
       add,
@@ -244,6 +262,7 @@ export default defineComponent({
       modalVisible,
       modalLoading,
       handleModalOk,
+
 
       handleDelete
     }
